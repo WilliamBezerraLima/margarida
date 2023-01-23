@@ -30,26 +30,40 @@ class PageListen extends ConsumerWidget {
               height: listenProvider.isOpen ? 0 : height * 0.6,
               width: MediaQuery.of(context).size.width,
               duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
               child: const PageListenList(),
             ),
           ),
           Positioned(
             bottom: 0,
             child: AnimatedContainer(
-              constraints: BoxConstraints(
-                minHeight: height * 0.4,
-              ),
               height: listenProvider.isOpen ? height : height * 0.4,
               width: MediaQuery.of(context).size.width,
               duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
               color: const Color(0xff3A3A3B),
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  ButtonMore(),
-                  PageListenDetail(),
-                  PageListenControl()
+                children: [
+                  const Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: ButtonMore(),
+                      )),
+                  Expanded(
+                    flex: listenProvider.isOpen ? 5 : 3,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: PageListenDetail(),
+                    ),
+                  ),
+
+                  Expanded(
+                    flex: listenProvider.isOpen ? 3 : 2,
+                    child: const PageListenControl(),
+                  ),
+                  // PageListenDetail(),
                 ],
               ),
             ),

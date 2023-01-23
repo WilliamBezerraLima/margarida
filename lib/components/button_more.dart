@@ -26,7 +26,7 @@ class ButtonMore extends ConsumerWidget {
               curve: Curves.easeInOut,
               turns: listenProvider.turns,
               child: Icon(
-                Icons.keyboard_arrow_down_rounded,
+                Icons.keyboard_arrow_up_rounded,
                 color: Colors.blueAccent,
                 size: 78 * ratio,
               ),

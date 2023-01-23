@@ -15,26 +15,23 @@ class _PageListenControlState extends State<PageListenControl> {
   Widget build(BuildContext context) {
     var ratio = MediaQuery.of(context).size.aspectRatio;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 12),
-      child: Column(
-        children: [
-          SizedBox(height: 20 * ratio),
-          const Progress(),
-          const Timers(),
-          SizedBox(height: 20 * ratio),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const ButtonPrevious(),
-              SizedBox(width: 85 * ratio),
-              const ButtonPlay(),
-              SizedBox(width: 85 * ratio),
-              const ButtonNext()
-            ],
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Progress(),
+        const SizedBox(height: 4),
+        const Timers(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const ButtonPrevious(),
+            SizedBox(width: 85 * ratio),
+            const ButtonPlay(),
+            SizedBox(width: 85 * ratio),
+            const ButtonNext()
+          ],
+        )
+      ],
     );
   }
 }

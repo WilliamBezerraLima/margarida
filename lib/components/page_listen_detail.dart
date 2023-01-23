@@ -12,13 +12,13 @@ class PageListenDetail extends ConsumerWidget {
     var listProvider = ref.watch(listenControllerProvider);
     var ratio = MediaQuery.of(context).size.aspectRatio;
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          SizedBox(height: listProvider.isOpen ? 20.0 : 10),
-          if (listProvider.audio != null)
-            Material(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (listProvider.audio != null)
+          Expanded(
+            flex: listProvider.isOpen ? 25 : 3,
+            child: Material(
               elevation: 4.0,
               shape: const CircleBorder(),
               clipBehavior: Clip.hardEdge,
@@ -34,21 +34,26 @@ class PageListenDetail extends ConsumerWidget {
                 ),
               ),
             ),
-          SizedBox(height: (listProvider.isOpen ? 30 : 15) * ratio),
-          if (listProvider.audio != null)
-            Text(listProvider.audio!.title!,
+          ),
+        if (listProvider.audio != null)
+          Expanded(
+            flex: listProvider.isOpen ? 2 : 1,
+            child: Text(listProvider.audio!.title!,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     fontWeight: FontWeight.bold, fontSize: 32 * ratio)),
-          //SizedBox(height: 6.0 * ratio),
-          if (listProvider.audio != null)
-            Text(
+          ),
+        //SizedBox(height: 6.0 * ratio),
+        if (listProvider.audio != null)
+          Expanded(
+            flex: 1,
+            child: Text(
               listProvider.audio!.author!,
               style: TextStyle(color: Colors.white60, fontSize: 22 * ratio),
               overflow: TextOverflow.ellipsis,
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

@@ -17,23 +17,25 @@ class PageListenList extends ConsumerWidget {
       duration: const Duration(milliseconds: 400),
       curve: Curves.bounceOut,
       opacity: listenProvider.isOpen ? 0 : 1,
-      child: Container(
-        width: double.infinity,
+      child: SizedBox(
         height: double.infinity,
-        margin: const EdgeInsets.all(8),
-        padding: const EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "A playlist contém ${listenProvider.audios.length} músicas",
-              style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white70,
-                  fontSize: 30 * ratio),
-            ),
-            SizedBox(height: 8 * ratio),
             Expanded(
+              flex: 1,
+              child: Center(
+                child: Text(
+                  "A playlist contém ${listenProvider.audios.length} músicas",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white70,
+                      fontSize: 30 * ratio),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 15,
               child: ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,

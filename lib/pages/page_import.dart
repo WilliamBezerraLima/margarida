@@ -291,39 +291,40 @@ class PageImportState extends ConsumerState<PageImport> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(3),
-              margin: const EdgeInsets.only(top: 3),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.orangeAccent),
-                gradient: LinearGradient(colors: [
-                  Colors.orangeAccent.shade200,
-                  Colors.orangeAccent.shade400,
-                  Colors.orangeAccent.shade700
-                ]),
+            if (validState())
+              Container(
+                padding: const EdgeInsets.all(3),
+                margin: const EdgeInsets.only(top: 3),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.orangeAccent),
+                  gradient: LinearGradient(colors: [
+                    Colors.orangeAccent.shade200,
+                    Colors.orangeAccent.shade400,
+                    Colors.orangeAccent.shade700
+                  ]),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.info_rounded,
+                      color: Colors.black87,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "CLIQUE NOS CARDS PARA SELECIONAR \nAS MÚSICAS QUE DESEJA IMPORTAR!",
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic),
+                    )
+                  ],
+                ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.info_rounded,
-                    color: Colors.black87,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    "CLIQUE NOS CARDS PARA SELECIONAR \nAS MÚSICAS QUE DESEJA IMPORTAR!",
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic),
-                  )
-                ],
-              ),
-            ),
             if (validState())
               Padding(
                 padding: const EdgeInsets.all(6.0),
@@ -435,11 +436,13 @@ class TileDetail extends ConsumerWidget {
             const SizedBox(width: 5),
             Expanded(
               flex: 5,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(video.thumbnail!),
-                      fit: BoxFit.fitWidth),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Image.network(
+                  video.thumbnail!,
+                  height: 80.0,
+                  width: 80.0,
+                  fit: BoxFit.cover, //change image fill type
                 ),
               ),
             ),
@@ -566,7 +569,7 @@ class ButtonImport extends ConsumerWidget {
                     await downloadProvider.startAll().then((_) => {
                           importProvider.addPlaylist(
                             downloadProvider.playlist,
-                            downloadProvider.videos,
+                            downloadProvider.getSelecteds()!,
                           ),
                           Navigator.of(context).pop()
                         });

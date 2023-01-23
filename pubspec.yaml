@@ -58,6 +58,7 @@ dependencies:
   cached_network_image: ^3.2.3
   lottie: ^2.2.0
   msh_checkbox: ^2.0.0
+  simple_ripple_animation: ^0.0.3
 
 dev_dependencies:
   flutter_test:

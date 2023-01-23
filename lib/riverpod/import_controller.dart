@@ -103,6 +103,9 @@ class DownloadController extends ChangeNotifier {
 
   int selectedCount() => _musicsStatus.where((music) => music.selected).length;
 
+  List<Tbvideo>? getSelecteds() =>
+      _videos.where((music) => isSelect(music.videoId!)).toList();
+
   bool hasSelecteds() =>
       _musicsStatus.where((music) => music.selected).isNotEmpty;
 
