@@ -40,7 +40,7 @@ class DownloadController extends ChangeNotifier {
   bool _importing = false;
 
   String? get downloadStatus => _countDownloaded > 0
-      ? "Importados $_countDownloaded de ${_videos.length} arquivos"
+      ? "Importados $_countDownloaded de ${selectedCount()} arquivos"
       : null;
   Tbplaylist get playlist => _playlist;
   List<Tbvideo> get videos => _videos;
@@ -100,6 +100,11 @@ class DownloadController extends ChangeNotifier {
   bool isSelect(String musicId) => _musicsStatus
       .where((music) => music.musicId == musicId && music.selected)
       .isNotEmpty;
+
+  int selectedCount() => _musicsStatus.where((music) => music.selected).length;
+
+  bool hasSelecteds() =>
+      _musicsStatus.where((music) => music.selected).isNotEmpty;
 
   void start(String musicId) {
     for (var music in _musicsStatus) {

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:audiofileplayer/audio_system.dart';
 import 'package:audiofileplayer/audiofileplayer.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:margarida/common/utils.dart';
 import 'package:margarida/model/model.dart';
 import 'package:margarida/riverpod/configuration_controller.dart';
@@ -10,13 +11,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logging/logging.dart';
+import 'package:margarida/riverpod/controls_controller.dart';
 
 final Logger _logger = Logger('algures');
 
 class ListenController extends ChangeNotifier {
   late ConfigurationController _config;
-  ListenController(ConfigurationController config) {
+  late ControlsController _controls;
+  ListenController(
+      ConfigurationController config, ControlsController controls) {
     _config = config;
+    _controls = controls;
   }
 
   static const String replayButtonId = 'replayButtonId';
@@ -147,7 +152,7 @@ class ListenController extends ChangeNotifier {
 
     _playing = true;
     if (_paused) {
-      await audioRef?.resume();
+      resume();
     } else {
       await audioRef?.play();
     }
@@ -163,10 +168,11 @@ class ListenController extends ChangeNotifier {
     AudioSystem.instance.stopBackgroundDisplay();
   }
 
-  void pause() {
+  Future<void> pause() async {
     _playing = false;
     _paused = true;
     audioRef?.pause();
+    _controls.stop();
 
     AudioSystem.instance.setPlaybackState(false, _position);
 
@@ -190,6 +196,7 @@ class ListenController extends ChangeNotifier {
   }
 
   Future<void> resume() async {
+    _controls.play();
     audioRef?.resume();
     _playing = true;
     _paused = false;
@@ -318,5 +325,6 @@ class ListenController extends ChangeNotifier {
 final listenControllerProvider =
     ChangeNotifierProvider<ListenController>((ref) {
   var config = ref.read(configurationControllerProvider);
-  return ListenController(config);
+  var controls = ref.read(controlsControllerProvider);
+  return ListenController(config, controls);
 });

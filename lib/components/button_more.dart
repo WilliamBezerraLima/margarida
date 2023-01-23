@@ -19,8 +19,8 @@ class ButtonMore extends ConsumerWidget {
             listenProvider.toggle();
           },
           child: SizedBox(
-            width: 70 * ratio,
-            height: 70 * ratio,
+            width: 80 * ratio,
+            height: 80 * ratio,
             child: AnimatedRotation(
               duration: const Duration(milliseconds: 600),
               curve: Curves.easeInOut,
@@ -28,7 +28,7 @@ class ButtonMore extends ConsumerWidget {
               child: Icon(
                 Icons.keyboard_arrow_down_rounded,
                 color: Colors.blueAccent,
-                size: 68 * ratio,
+                size: 78 * ratio,
               ),
             ),
           ),

@@ -16,7 +16,7 @@ class _PageListenControlState extends State<PageListenControl> {
     var ratio = MediaQuery.of(context).size.aspectRatio;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 12),
       child: Column(
         children: [
           SizedBox(height: 20 * ratio),

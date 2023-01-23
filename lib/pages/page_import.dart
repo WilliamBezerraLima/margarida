@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:developer' as developer;
+import 'package:lottie/lottie.dart';
 import 'package:margarida/auth/secrets.dart';
 import 'package:margarida/common/utils.dart';
 import 'package:margarida/components/appbar_main.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:msh_checkbox/msh_checkbox.dart';
 import 'package:uuid/uuid.dart';
 import 'package:youtube_api/youtube_api.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -316,7 +318,8 @@ class PageImportState extends ConsumerState<PageImport> {
                     style: TextStyle(
                         color: Colors.black87,
                         fontWeight: FontWeight.w400,
-                        fontSize: 10),
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic),
                   )
                 ],
               ),
@@ -343,6 +346,7 @@ class PageImportState extends ConsumerState<PageImport> {
               Expanded(
                 child: ListView.builder(
                   shrinkWrap: true,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   itemCount: videos.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -401,18 +405,34 @@ class TileDetail extends ConsumerWidget {
           decoration: !provider.isSelect(video.videoId!)
               ? null
               : BoxDecoration(
-                  borderRadius: BorderRadius.circular(1),
-                  border:
-                      Border.all(color: const Color.fromARGB(255, 48, 113, 50)),
-                  gradient: LinearGradient(colors: [
-                    Colors.green.shade300,
-                    Colors.green.shade500,
-                    Colors.green.shade400
-                  ]),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.green, width: 2),
+                  // gradient: LinearGradient(colors: [
+                  //   Colors.green.shade300,
+                  //   Colors.green.shade500,
+                  //   Colors.green.shade400
+                  // ]),
                 ),
-          height: 90,
+          height: 80,
           padding: const EdgeInsets.all(6),
           child: Row(children: [
+            Expanded(
+              flex: 2,
+              child: MSHCheckbox(
+                size: 30,
+                value: provider.isSelect(video.videoId!),
+                style: MSHCheckboxStyle.fillFade,
+                colorConfig: MSHColorConfig.fromCheckedUncheckedDisabled(
+                  checkedColor: Colors.green,
+                  uncheckedColor: Colors.grey.shade600,
+                ),
+                duration: const Duration(milliseconds: 300),
+                onChanged: (selected) {
+                  provider.select(video.videoId!);
+                },
+              ),
+            ),
+            const SizedBox(width: 5),
             Expanded(
               flex: 5,
               child: Container(
@@ -466,7 +486,7 @@ class TileDetail extends ConsumerWidget {
                             SizedBox(
                                 width: 100,
                                 child: LinearProgressIndicator(
-                                  color: Colors.blueAccent.shade200,
+                                  color: Colors.green.shade500,
                                   value: provider
                                           .getMusic(video.videoId!)
                                           .percent /
@@ -475,8 +495,7 @@ class TileDetail extends ConsumerWidget {
                             Text(
                               'Download ${provider.getMusic(video.videoId!).percent}%',
                               style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.blueAccent.shade100),
+                                  fontSize: 10, color: Colors.green.shade500),
                             ),
 
                             // ElevatedButton(
@@ -543,13 +562,17 @@ class ButtonImport extends ConsumerWidget {
           onPressed: downloadProvider.importing
               ? null
               : () async {
-                  downloadProvider.startAll().then((_) => {
-                        importProvider.addPlaylist(
-                          downloadProvider.playlist,
-                          downloadProvider.videos,
-                        ),
-                        Navigator.of(context).pop()
-                      });
+                  if (downloadProvider.hasSelecteds()) {
+                    await downloadProvider.startAll().then((_) => {
+                          importProvider.addPlaylist(
+                            downloadProvider.playlist,
+                            downloadProvider.videos,
+                          ),
+                          Navigator.of(context).pop()
+                        });
+                  } else {
+                    _showMaterialDialog(context);
+                  }
                 },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -581,6 +604,40 @@ class ButtonImport extends ConsumerWidget {
       ),
     );
   }
+}
+
+Future<void> _showMaterialDialog(BuildContext context) async {
+  showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Importação'),
+          content: const Text(
+              'Você não selecionou nenhuma música para importar.\n'
+              'Se deseja importar todas as músicas, clique no botão "Todas".\n'
+              'Ou clique em uma música para selecionar a mesma.'),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'CANCELAR',
+                  style: TextStyle(color: Colors.blueAccent),
+                )),
+            TextButton(
+              onPressed: () {
+                print('Importar todas!');
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'IMPORTAR TODAS!',
+                style: TextStyle(color: Colors.blueAccent),
+              ),
+            )
+          ],
+        );
+      });
 }
 
 Future<void> _dialogBuilder(BuildContext context, String text) {

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:margarida/riverpod/controls_controller.dart';
 import 'package:margarida/riverpod/listen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -26,6 +27,17 @@ class ButtonPlay extends HookConsumerWidget {
 
     Animation<double> offset =
         Tween<double>(begin: 1, end: 1.3).animate(controllerContainer);
+
+    ref.listen<ControlsController>(controlsControllerProvider,
+        (previous, next) {
+      if (next.playing) {
+        controllerContainer.forward();
+        controller.forward();
+      } else {
+        controllerContainer.reverse();
+        controller.reverse();
+      }
+    });
 
     return AnimatedBuilder(
         animation: controllerContainer,
@@ -54,12 +66,8 @@ class ButtonPlay extends HookConsumerWidget {
                     splashColor: Colors.red, // Splash color
                     onTap: () async {
                       if (listProvider.playing) {
-                        await controllerContainer.reverse();
-                        await controller.reverse();
                         listProvider.pause();
                       } else {
-                        await controllerContainer.forward();
-                        await controller.forward();
                         listProvider.play();
                       }
                     },
