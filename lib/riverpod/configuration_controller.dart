@@ -5,12 +5,18 @@ import 'package:margarida/model/model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:margarida/riverpod/theme_controller.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ConfigurationController extends ChangeNotifier {
   bool? _autoplay;
   bool? _darkmode;
   String? _downloadpath;
+  ThemeController? _theme;
+
+  ConfigurationController(ThemeController theme) {
+    _theme = theme;
+  }
 
   bool? get autoplay => _autoplay;
   bool? get darkmode => _darkmode;
@@ -39,6 +45,13 @@ class ConfigurationController extends ChangeNotifier {
   }
 
   setConfiguration(bool? autoplay, bool? darkmode, String? downloadPath) {
+    if (_autoplay == null) {
+      if (darkmode == true) {
+        _theme?.setDark();
+      } else {
+        _theme?.setLight();
+      }
+    }
     _autoplay = autoplay;
     _darkmode = darkmode;
     _downloadpath = downloadPath;
@@ -66,5 +79,6 @@ class ConfigurationController extends ChangeNotifier {
 
 final configurationControllerProvider =
     ChangeNotifierProvider<ConfigurationController>((ref) {
-  return ConfigurationController();
+  var theme = ref.read(themeControllerProvider);
+  return ConfigurationController(theme);
 });

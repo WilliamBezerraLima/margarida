@@ -53,7 +53,7 @@ class Progress extends ConsumerWidget {
       child: Slider(
         activeColor: Colors.blueAccent.shade100,
         thumbColor: Colors.blueAccent,
-        inactiveColor: Colors.white60,
+        inactiveColor: Colors.black12,
         value: listProvider.position,
         max: listProvider.maxPosition,
         label: listProvider.position.round().toString(),

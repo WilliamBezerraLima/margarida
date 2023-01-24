@@ -8,6 +8,7 @@ import 'package:margarida/riverpod/listen_controller.dart';
 import 'package:margarida/riverpod/playlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:margarida/riverpod/theme_controller.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 
 class MainScreen extends ConsumerWidget {
@@ -24,6 +25,7 @@ class MainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final listenProvider = ref.watch(listenControllerProvider);
+    final theme = ref.watch(themeControllerProvider);
     var ratio = MediaQuery.of(context).size.aspectRatio;
     var height = MediaQuery.of(context).size.height;
 
@@ -60,6 +62,7 @@ class MainScreen extends ConsumerWidget {
           ],
         ),
       ),
+      backgroundColor: theme.backgroundColor1,
       body: ref.watch(playlistsProvider).maybeWhen(
           orElse: () => const Center(child: CircularProgressIndicator()),
           error: (err, stack) => Text('Error: $err'),
@@ -75,7 +78,9 @@ class MainScreen extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                            "Quantidade de playlists: ${playlists.length}"),
+                          "Quantidade de playlists: ${playlists.length}",
+                          style: TextStyle(color: theme.tileTitle2),
+                        ),
                       ),
                     ),
                   Expanded(
@@ -90,8 +95,10 @@ class MainScreen extends ConsumerWidget {
                           height: height,
                           width: MediaQuery.of(context).size.width,
                           child: playlists.isEmpty
-                              ? const Center(
-                                  child: Text("Nenhuma lista cadastrada!"),
+                              ? Center(
+                                  child: Text("Nenhuma lista cadastrada!",
+                                      style:
+                                          TextStyle(color: theme.tileTitle2)),
                                 )
                               : GridView.builder(
                                   shrinkWrap: true,
@@ -131,12 +138,12 @@ class MainScreen extends ConsumerWidget {
                                                           playlist.id
                                                       ? 5
                                                       : 1),
-                                          color: Colors.black54,
+                                          color: theme.cardBackground1,
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(8.0)),
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              color: Colors.white30,
+                                              color: theme.shadow1,
                                               blurRadius: 2,
                                               spreadRadius: 1,
                                               offset: Offset(0, 2),
@@ -205,7 +212,7 @@ class MainScreen extends ConsumerWidget {
                                                                   .id ==
                                                               playlist.id
                                                           ? Colors.blue.shade300
-                                                          : Colors.white70),
+                                                          : theme.tileTitle2),
                                                 ),
                                               ),
                                           ],
@@ -220,22 +227,30 @@ class MainScreen extends ConsumerWidget {
                   ),
                   const Expanded(
                     flex: 3,
-                    child: PageListenControl(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: PageListenControl(),
+                    ),
                   ),
                 ],
               ),
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const PageImport()));
-        },
-        backgroundColor: Colors.blueAccent.shade200,
-        child: Icon(
-          Icons.install_mobile_outlined,
-          color: Colors.white70,
-          size: 60 * ratio,
+      floatingActionButton: Padding(
+        padding: listenProvider.playing
+            ? const EdgeInsets.only(bottom: 80.0)
+            : const EdgeInsets.all(0),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const PageImport()));
+          },
+          backgroundColor: Colors.blueAccent.shade200,
+          child: Icon(
+            Icons.install_mobile_outlined,
+            color: Colors.white70,
+            size: 60 * ratio,
+          ),
         ),
       ),
     );

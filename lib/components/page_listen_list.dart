@@ -4,6 +4,7 @@ import 'package:margarida/model/model.dart';
 import 'package:margarida/riverpod/listen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:margarida/riverpod/theme_controller.dart';
 
 class PageListenList extends ConsumerWidget {
   const PageListenList({super.key});
@@ -11,6 +12,7 @@ class PageListenList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var listenProvider = ref.watch(listenControllerProvider);
+    var theme = ref.watch(themeControllerProvider);
     var ratio = MediaQuery.of(context).size.aspectRatio;
 
     return AnimatedOpacity(
@@ -29,7 +31,7 @@ class PageListenList extends ConsumerWidget {
                   "A playlist contém ${listenProvider.audios.length} músicas",
                   style: TextStyle(
                       fontWeight: FontWeight.w300,
-                      color: Colors.white70,
+                      color: theme.title2,
                       fontSize: 30 * ratio),
                 ),
               ),
@@ -76,7 +78,7 @@ class PageListenList extends ConsumerWidget {
   }
 }
 
-class Subtitle extends StatelessWidget {
+class Subtitle extends ConsumerWidget {
   const Subtitle({
     Key? key,
     required this.video,
@@ -85,8 +87,9 @@ class Subtitle extends StatelessWidget {
   final Tbvideo video;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var ratio = MediaQuery.of(context).size.aspectRatio;
+    var theme = ref.watch(themeControllerProvider);
 
     return Row(
       children: [
@@ -95,20 +98,21 @@ class Subtitle extends StatelessWidget {
             width: double.infinity,
             child: Text(
               video.author!,
-              style: TextStyle(fontSize: 22 * ratio),
+              style: TextStyle(fontSize: 22 * ratio, color: theme.tileTitle2),
               overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
         if (video.duration != null) const Spacer(),
         if (video.duration != null)
-          Text(video.duration!, style: TextStyle(fontSize: 22 * ratio)),
+          Text(video.duration!,
+              style: TextStyle(fontSize: 22 * ratio, color: theme.tileTitle2)),
       ],
     );
   }
 }
 
-class Title extends StatelessWidget {
+class Title extends ConsumerWidget {
   const Title({
     Key? key,
     required this.video,
@@ -119,8 +123,9 @@ class Title extends StatelessWidget {
   final ListenController listenProvider;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var ratio = MediaQuery.of(context).size.aspectRatio;
+    var theme = ref.watch(themeControllerProvider);
 
     return Row(
       children: [
@@ -131,7 +136,7 @@ class Title extends StatelessWidget {
             child: Text(
               video.title!,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 28 * ratio),
+              style: TextStyle(fontSize: 28 * ratio, color: theme.tileTitle1),
             ),
           ),
         ),
